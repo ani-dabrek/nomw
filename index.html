@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071312">
+  <meta name="description" content="Private, local-first time tools.">
+  <title>Not On My Watch</title>
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%8C%9A%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles/base.css">
+  <script src="scripts/base.js" defer></script>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Not On My Watch</div>
+      <nav class="nav-links" aria-label="Main navigation"><button class="active"
+          data-panel="stopwatch">Stopwatch</button><button data-panel="timer">Timer</button><button
+          data-panel="alarm">Alarms</button><button data-panel="world">World clock</button><button
+          data-panel="unix">UNIX</button><button data-panel="calculator">Calculator</button></nav>
+      <div class="top-actions">
+        <div class="header-time"><time id="header-clock">00:00:00</time><span id="header-date">Loading date</span></div>
+        <button class="icon-button format-toggle" id="format-toggle" aria-label="Switch time format">24</button><button
+          class="icon-button theme-toggle" id="theme-toggle" aria-label="Switch color theme">☾</button><button
+          class="icon-button menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-time"><time id="mobile-clock">00:00:00</time><span id="mobile-date">Loading date</span></div>
+      <nav class="mobile-nav" aria-label="Mobile navigation"></nav>
+    </div>
+  </header>
+  <main id="main-content">
+    <section class="panel active" id="stopwatch-panel">
+      <div class="section-heading">
+        <div>
+          <h1>Stopwatch</h1>
+        </div>
+      </div>
+      <div class="hero-tool">
+        <div class="digital-display stopwatch-display" id="stopwatch-display">00:00<span>.00</span></div>
+        <div class="control-row"><button class="primary control" id="stopwatch-start">Start</button><button
+            class="secondary control" id="stopwatch-lap" disabled>Lap</button><button class="secondary control"
+            id="stopwatch-reset" disabled>Reset</button></div>
+      </div>
+      <ol class="laps" id="lap-list"></ol>
+    </section>
+    <section class="panel" id="timer-panel">
+      <div class="section-heading">
+        <div>
+          <h1>Timer</h1>
+        </div>
+      </div>
+      <div class="timer-empty" id="timer-empty">
+        <div class="digital-display timer-entry-display" id="timer-entry">00h <i>:</i> 00m <i>:</i> 00s</div>
+        <div class="preset-row"><button data-preset="30">30s</button><button data-preset="60">1m</button><button
+            data-preset="900">15m</button><button data-preset="1800">30m</button><button data-preset="3600">1h</button>
+        </div>
+        <div class="keypad" id="timer-keypad"></div>
+        <div class="timer-entry-actions"><button class="primary wide" id="timer-start">Start timer</button><button
+            class="text-button" id="timer-cancel" type="button" hidden>Cancel</button></div>
+      </div>
+      <div class="timer-list" id="timer-list"></div><button class="add-fab" id="timer-add"
+        aria-label="Add another timer" hidden>+</button>
+    </section>
+    <section class="panel" id="alarm-panel">
+      <div class="section-heading">
+        <div>
+          <h1>Alarms</h1>
+        </div>
+      </div>
+      <div class="alarm-list" id="alarm-list"></div>
+      <div class="empty-state" id="alarm-empty"><span>◌</span>
+        <h2>No alarms yet</h2>
+        <p>Set one for a moment you don’t want to miss.</p>
+      </div><button class="primary add-alarm" id="add-alarm">+ Add alarm</button>
+    </section>
+    <section class="panel" id="world-panel">
+      <div class="section-heading">
+        <div>
+          <h1>World clock</h1>
+        </div>
+      </div>
+      <div class="main-clock-card" id="main-clock-card">
+        <p class="clock-label" id="local-zone">YOUR LOCAL TIME</p>
+        <div class="digital-display" id="world-main-time">00:00:00</div>
+        <p id="world-main-date">Loading date</p><button class="text-button" id="adjust-main-clock">Adjust time</button>
+      </div>
+      <div class="world-grid" id="world-grid"></div>
+    </section>
+    <section class="panel" id="unix-panel">
+      <div class="section-heading">
+        <div>
+          <h1>UNIX converter</h1>
+        </div>
+      </div>
+      <div class="unix-now-card">
+        <p>RIGHT NOW <span>click to copy</span></p><button id="unix-now" class="digital-display">0</button><time
+          id="unix-now-readable">Loading date</time>
+      </div>
+      <div class="tool-grid two-up">
+        <form class="surface-form" id="unix-convert-form">
+          <h2>Convert a date</h2><label>Date & time<input type="datetime-local" id="unix-date-input" step="1"
+              required></label><button class="primary">Get timestamp</button><output id="unix-result">—</output>
+        </form>
+        <form class="surface-form" id="unix-reverse-form">
+          <h2>Read a timestamp</h2><label>UNIX timestamp<input type="number" id="unix-number-input"
+              placeholder="e.g. 1787276738" required></label><button class="primary">Read date</button><output
+            id="unix-reverse-result">—</output>
+        </form>
+      </div>
+      <div class="discord-card">
+        <h2>Discord formats</h2><label>Timestamp<input type="datetime-local" id="discord-date-input" step="1"></label>
+        <div class="discord-formats" id="discord-formats"></div>
+      </div>
+    </section>
+    <section class="panel" id="calculator-panel">
+      <div class="section-heading">
+        <div>
+          <h1>Time calculator</h1>
+        </div>
+      </div><button class="calc-clock" id="calc-clock"><span class="clock-label">REFERENCE MOMENT</span><span
+          class="digital-display" id="calc-clock-time">00:00:00</span><span id="calc-clock-date">Loading
+          date</span><small>Click to set a fixed time</small></button>
+      <div class="tool-grid two-up">
+        <form class="surface-form time-math" id="time-math-form">
+          <h2>Add or subtract</h2>
+          <div class="inline-fields"><label>Amount<input type="number" id="time-amount" value="1"
+                step="any"></label><label>Unit<select id="time-unit">
+                <option value="milliseconds">milliseconds</option>
+                <option value="seconds">seconds</option>
+                <option value="minutes" selected>minutes</option>
+                <option value="hours">hours</option>
+                <option value="days">days</option>
+                <option value="weeks">weeks</option>
+                <option value="months">months</option>
+                <option value="years">years</option>
+                <option value="decades">decades</option>
+                <option value="centuries">centuries</option>
+              </select></label></div>
+          <div class="dual-buttons"><button class="secondary" type="submit" data-direction="-1">−
+              Subtract</button><button class="primary" type="submit" data-direction="1">+ Add</button></div>
+        </form>
+        <form class="surface-form" id="difference-form">
+          <h2>Find the difference</h2><label>Start<input type="datetime-local" id="diff-start"
+              step="1"></label><label>End<input type="datetime-local" id="diff-end" step="1"></label><button
+            class="primary">Calculate</button><output id="difference-result">Choose two moments to compare.</output>
+        </form>
+      </div>
+      <form class="longitude-card" id="longitude-form">
+        <div>
+          <h2>Longitude</h2>
+        </div><label>At 0° longitude<input type="datetime-local" id="longitude-date" step="60"></label><label>Target
+          longitude
+          (−180 to 180)<input type="number" id="longitude-value" min="-180" max="180" value="0"
+            step="0.1"></label><button class="primary">Calculate</button><output id="longitude-result">—</output>
+      </form>
+    </section>
+  </main>
+  <footer>
+    <div class="social-links"><a href="https://github.com/ani-dabrek" target="_blank" rel="noreferrer">GitHub</a><a
+        href="https://www.youtube.com/@ani.dabrek" target="_blank" rel="noreferrer">YouTube</a><a
+        href="https://t.me/+1n-5cRnzUopmYWJl" target="_blank" rel="noreferrer">Telegram</a><a
+        href="https://discord.gg/dwygnYDJ3X" target="_blank" rel="noreferrer">Discord</a></div>
+  </footer>
+  <dialog id="alarm-dialog">
+    <form method="dialog" class="modal-card" id="alarm-form"><button class="close-modal" type="button"
+        aria-label="Close">×</button>
+      <h2 id="alarm-dialog-title">Set alarm</h2><label>Time<input type="time" id="alarm-time" step="1"
+          required></label><label>Start date
+        <small>optional</small><input type="date" id="alarm-date"></label>
+      <fieldset>
+        <legend>Repeat on <button id="alarm-select-all" class="inline-action" type="button">Select all</button></legend>
+        <div class="day-pills" id="alarm-days"><button type="button" data-day="1">M</button><button type="button"
+            data-day="2">T</button><button type="button" data-day="3">W</button><button type="button"
+            data-day="4">T</button><button type="button" data-day="5">F</button><button type="button"
+            data-day="6">S</button><button type="button" data-day="0">S</button></div>
+      </fieldset><button class="primary" value="default">Save alarm</button>
+    </form>
+  </dialog>
+  <dialog id="timezone-dialog">
+    <form method="dialog" class="modal-card"><button class="close-modal" type="button" aria-label="Close">×</button>
+      <h2>Find a place</h2><input type="search" id="timezone-search" placeholder="Search city or IANA timezone">
+      <div class="timezone-list" id="timezone-list"></div><label>Or fixed UTC offset<input type="text" id="fixed-offset"
+          placeholder="e.g. UTC+05:30"></label><button class="primary" id="add-fixed-zone" value="default">Add
+        clock</button>
+    </form>
+  </dialog>
+  <dialog id="time-dialog">
+    <form method="dialog" class="modal-card"><button class="close-modal" type="button" aria-label="Close">×</button>
+      <h2>Choose a moment</h2><label>Date & time<input type="datetime-local" id="set-time-input"
+          step="1"></label><button class="primary" id="save-time" value="default">Set time</button><button
+        class="text-button" id="reset-time" value="default">Return to live time</button>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+</body>
+
+</html>
